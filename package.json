@@ -1,21 +1,28 @@
 {
-  "name": "my-monorepo",
-  "private": true,
-  "version": "1.0.0",
-  "description": "",
-  "license": "ISC",
-  "author": "",
-  "type": "module",
-  "main": "index.js",
-  "scripts": {
-    "component": "pnpm --filter @my-monorepo/component",
-    "lib": "pnpm --filter @my-monorepo/lib",
-    "core": "pnpm --filter @my-monorepo/core",
-    "graph": "turbo-graph"
-  },
-  "packageManager": "pnpm@9.12.3",
-  "engines": {
-    "node": "^22.12.0",
-    "pnpm": "9.12.3"
-  }
+    "name": "my-monorepo",
+    "version": "1.0.0",
+    "private": true,
+    "description": "",
+    "license": "ISC",
+    "author": "",
+    "type": "module",
+    "main": "index.js",
+    "scripts": {
+        "component": "pnpm --filter @my-monorepo/component",
+        "core": "pnpm --filter @my-monorepo/core",
+        "graph": "turbo-graph",
+        "lib": "pnpm --filter @my-monorepo/lib",
+        "lint": "eslint '**/*.{js,yaml,yml,json}' --fix",
+        "prettier": "prettier --write '**/*.{js,json}'"
+    },
+    "devDependencies": {
+        "@naverpay/eslint-config": "^2.2.5",
+        "@naverpay/prettier-config": "^1.0.1",
+        "eslint": "^9.23.0"
+    },
+    "packageManager": "pnpm@9.12.3",
+    "engines": {
+        "node": "^22.12.0",
+        "pnpm": "9.12.3"
+    }
 }
