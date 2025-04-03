@@ -1,15 +1,17 @@
 import coreInstance from '@my-monorepo/core'
 
+type Data = Record<string, unknown>
+
 // 이벤트 핸들러 정의
-function onModuleRegistered(data) {
+function onModuleRegistered(data: Data) {
     console.log(`[Component] Module registered with data:`, data)
 }
 
-function onModuleUpdated(data) {
+function onModuleUpdated(data: Data) {
     console.log(`[Component] Module updated with new data:`, data)
 }
 
-function onOnceExample(data) {
+function onOnceExample(data: Data) {
     console.log(`[Component] This will only run once!`, data)
 }
 

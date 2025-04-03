@@ -2,9 +2,10 @@
     "name": "@my-monorepo/lib",
     "version": "1.0.0",
     "type": "module",
-    "main": "./index.js",
+    "main": "./dist/index.js",
     "scripts": {
-        "start": "echo \"NO START SCRIPT\""
+        "build": "tsc",
+        "clean": "rm -rf dist"
     },
     "dependencies": {
         "@naverpay/hidash": "^0.2.2"

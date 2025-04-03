@@ -3,7 +3,7 @@ import {defineConfig} from 'eslint/config'
 
 export default defineConfig([
     {
-        ignores: ['.changeset/*'],
+        ignores: ['.changeset/*', '**/dist/*'],
     },
     ...naverpay.configs.node,
     ...naverpay.configs.packageJson,

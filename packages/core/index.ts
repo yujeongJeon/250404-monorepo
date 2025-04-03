@@ -3,9 +3,11 @@ import EventEmitter from 'node:events'
 import {isValidEvent} from '@my-monorepo/lib'
 import isEmpty from '@naverpay/hidash/isEmpty'
 
+type Handler = (...args: any[]) => void
+
 class Core extends EventEmitter {
     // 이벤트 타입과 핸들러를 저장
-    #listeners = {}
+    #listeners: Record<string, {handler: Handler; once: boolean}[]> = {}
 
     // eslint-disable-next-line no-useless-constructor
     constructor() {
@@ -18,7 +20,7 @@ class Core extends EventEmitter {
      * @param {Function} handler - 이벤트 핸들러 함수
      * @param {boolean} [once=false] - 한 번만 실행되는지 여부
      */
-    registerEvent(eventType, handler, once = false) {
+    registerEvent(eventType: string, handler: Handler, once: boolean = false) {
         if (!isValidEvent(handler)) {
             throw new Error('Invalid handler')
         }
@@ -28,15 +30,15 @@ class Core extends EventEmitter {
 
         // 핸들러 등록
         if (once) {
-            const wrappedHandler = (...args) => {
+            const wrappedHandler = (...args: unknown[]) => {
                 handler(...args)
                 this.removeEvent(eventType, wrappedHandler)
             }
             this.once(eventType, wrappedHandler)
-            this.#listeners[eventType].push({handler: wrappedHandler, once})
+            this.#listeners[eventType]?.push({handler: wrappedHandler, once})
         } else {
             this.on(eventType, handler)
-            this.#listeners[eventType].push({handler, once})
+            this.#listeners[eventType]?.push({handler, once})
         }
     }
 
@@ -45,7 +47,7 @@ class Core extends EventEmitter {
      * @param {string} eventType - 트리거할 이벤트 타입
      * @param  {...any} args - 핸들러에 전달할 인수
      */
-    emitEvent(eventType, ...args) {
+    emitEvent(eventType: string, ...args: unknown[]) {
         if (!this.#listeners[eventType]) {
             console.warn(`No listeners registered for event: ${eventType}`)
             return
@@ -58,7 +60,7 @@ class Core extends EventEmitter {
      * @param {string} eventType - 제거할 이벤트 타입
      * @param {Function} handler - 제거할 핸들러 함수
      */
-    removeEvent(eventType, handler) {
+    removeEvent(eventType: string, handler: Handler) {
         if (!this.#listeners[eventType]) return
 
         // 내부 관리용 배열에서 삭제
@@ -77,7 +79,7 @@ class Core extends EventEmitter {
      * 특정 이벤트의 모든 핸들러 제거
      * @param {string} eventType - 제거할 이벤트 타입
      */
-    removeAllEvents(eventType) {
+    removeAllEvents(eventType: string) {
         if (!this.#listeners[eventType]) return
 
         // 실제 EventEmitter에서 모든 리스너 제거

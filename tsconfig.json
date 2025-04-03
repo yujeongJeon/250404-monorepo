@@ -1,0 +1,39 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "lib": ["ES2024"], // remove if you want to use the DOM
+        "skipLibCheck": true,
+        // Emptily imported modules must exist
+        "noUncheckedSideEffectImports": true,
+
+        //========== Compiling TS with tools other than tsc ==========
+        //----- Emitting .js -----
+        // Enforces keyword `type` for type imports etc.
+        "verbatimModuleSyntax": false, // implies "isolatedModules"
+        // - Forbids non-JavaScript language constructs such as JSX,
+        //   enums, constructor parameter properties and namespaces
+        // - Important for type stripping
+        // "erasableSyntaxOnly": true, // TS 5.8+
+        "module": "NodeNext", // sets up "moduleResolution",
+        "moduleResolution": "NodeNext",
+        "esModuleInterop": true,
+
+        //========== Type checking ==========
+        "strict": true, // activates several useful options
+        "exactOptionalPropertyTypes": true, // remove if not helpful
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitOverride": true,
+        "noImplicitReturns": true,
+        "noPropertyAccessFromIndexSignature": true,
+        "noUncheckedIndexedAccess": true,
+
+        //========== Non-code artifacts ==========
+        // Lets us import JSON files
+        "resolveJsonModule": true,
+
+        //===== Run TS directly =====
+        "allowImportingTsExtensions": true,
+        // Only needed if additionally compiling to JavaScript:
+        "rewriteRelativeImportExtensions": true
+    }
+}

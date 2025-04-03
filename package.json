@@ -8,17 +8,19 @@
     "type": "module",
     "main": "index.js",
     "scripts": {
-        "component": "pnpm --filter @my-monorepo/component",
-        "core": "pnpm --filter @my-monorepo/core",
-        "graph": "turbo-graph",
-        "lib": "pnpm --filter @my-monorepo/lib",
+        "build": "turbo build",
+        "clean": "turbo clean",
         "lint": "eslint '**/*.{js,yaml,yml,json}' --fix",
-        "prettier": "prettier --write '**/*.{js,json}'"
+        "prettier": "prettier --write '**/*.{js,json}'",
+        "start": "turbo start"
     },
     "devDependencies": {
         "@naverpay/eslint-config": "^2.2.5",
         "@naverpay/prettier-config": "^1.0.1",
-        "eslint": "^9.23.0"
+        "@types/node": "^22.14.0",
+        "eslint": "^9.23.0",
+        "turbo": "^2.4.4",
+        "typescript": "^5.8.2"
     },
     "packageManager": "pnpm@9.12.3",
     "engines": {
