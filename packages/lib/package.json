@@ -3,10 +3,10 @@
     "version": "1.0.0",
     "type": "module",
     "main": "./index.js",
-    "dependencies": {
-        "@naverpay/hidash": "^0.2.2"
-    },
     "scripts": {
         "start": "echo \"NO START SCRIPT\""
+    },
+    "dependencies": {
+        "@naverpay/hidash": "^0.2.2"
     }
 }

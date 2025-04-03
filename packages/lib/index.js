@@ -1,7 +1,7 @@
-import isString from '@naverpay/hidash/isString'
 import isFunction from '@naverpay/hidash/isFunction'
-import isPlainObject from '@naverpay/hidash/isPlainObject'
 import isNull from '@naverpay/hidash/isNull'
+import isPlainObject from '@naverpay/hidash/isPlainObject'
+import isString from '@naverpay/hidash/isString'
 
 export const isPositiveNum = (num) => !!num && num > 0
 

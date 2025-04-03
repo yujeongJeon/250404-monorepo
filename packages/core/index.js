@@ -1,13 +1,15 @@
-import EventEmitter from 'node:events';
-import {isValidEvent}from '@my-monorepo/lib'
+import EventEmitter from 'node:events'
+
+import {isValidEvent} from '@my-monorepo/lib'
 import isEmpty from '@naverpay/hidash/isEmpty'
 
 class Core extends EventEmitter {
     // 이벤트 타입과 핸들러를 저장
-    #listeners = {}; 
+    #listeners = {}
 
+    // eslint-disable-next-line no-useless-constructor
     constructor() {
-        super();
+        super()
     }
 
     /**
@@ -21,21 +23,21 @@ class Core extends EventEmitter {
             throw new Error('Invalid handler')
         }
         if (isEmpty(this.#listeners[eventType])) {
-            this.#listeners[eventType] = [];
+            this.#listeners[eventType] = []
         }
 
         // 핸들러 등록
         if (once) {
             const wrappedHandler = (...args) => {
-                handler(...args);
-                this.removeEvent(eventType, wrappedHandler);
-            };
-            this.once(eventType, wrappedHandler);
-            this.#listeners[eventType].push({ handler: wrappedHandler, once });
+                handler(...args)
+                this.removeEvent(eventType, wrappedHandler)
+            }
+            this.once(eventType, wrappedHandler)
+            this.#listeners[eventType].push({handler: wrappedHandler, once})
         } else {
-            this.on(eventType, handler);
-            this.#listeners[eventType].push({ handler, once });
-        }   
+            this.on(eventType, handler)
+            this.#listeners[eventType].push({handler, once})
+        }
     }
 
     /**
@@ -45,10 +47,10 @@ class Core extends EventEmitter {
      */
     emitEvent(eventType, ...args) {
         if (!this.#listeners[eventType]) {
-            console.warn(`No listeners registered for event: ${eventType}`);
-            return;
+            console.warn(`No listeners registered for event: ${eventType}`)
+            return
         }
-        this.emit(eventType, ...args);
+        this.emit(eventType, ...args)
     }
 
     /**
@@ -57,19 +59,17 @@ class Core extends EventEmitter {
      * @param {Function} handler - 제거할 핸들러 함수
      */
     removeEvent(eventType, handler) {
-        if (!this.#listeners[eventType]) return;
+        if (!this.#listeners[eventType]) return
 
         // 내부 관리용 배열에서 삭제
-        this.#listeners[eventType] = this.#listeners[eventType].filter(
-            (listener) => listener.handler !== handler
-        );
+        this.#listeners[eventType] = this.#listeners[eventType].filter((listener) => listener.handler !== handler)
 
         // 실제 EventEmitter에서도 제거
-        this.removeListener(eventType, handler);
+        this.removeListener(eventType, handler)
 
         // 해당 타입의 리스너가 모두 제거되면 배열 삭제
         if (this.#listeners[eventType].length === 0) {
-            delete this.#listeners[eventType];
+            delete this.#listeners[eventType]
         }
     }
 
@@ -78,22 +78,22 @@ class Core extends EventEmitter {
      * @param {string} eventType - 제거할 이벤트 타입
      */
     removeAllEvents(eventType) {
-        if (!this.#listeners[eventType]) return;
+        if (!this.#listeners[eventType]) return
 
         // 실제 EventEmitter에서 모든 리스너 제거
-        this.removeAllListeners(eventType);
+        this.removeAllListeners(eventType)
 
         // 내부 관리용 객체에서 삭제
-        delete this.#listeners[eventType];
+        delete this.#listeners[eventType]
     }
 
     /**
      * 현재 등록된 모든 리스너 반환 (디버깅 용도)
      */
     getListeners() {
-        return JSON.parse(JSON.stringify(this.#listeners));
+        return JSON.parse(JSON.stringify(this.#listeners))
     }
 }
 
-const coreInstance = new Core();
-export default coreInstance;
+const coreInstance = new Core()
+export default coreInstance
