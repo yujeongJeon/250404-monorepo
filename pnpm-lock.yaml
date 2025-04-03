@@ -1,0 +1,40 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .: {}
+
+  packages/component:
+    dependencies:
+      '@my-monorepo/core':
+        specifier: workspace:^
+        version: link:../core
+
+  packages/core:
+    dependencies:
+      '@my-monorepo/lib':
+        specifier: workspace:^
+        version: link:../lib
+      '@naverpay/hidash':
+        specifier: ^0.2.2
+        version: 0.2.2
+
+  packages/lib:
+    dependencies:
+      '@naverpay/hidash':
+        specifier: ^0.2.2
+        version: 0.2.2
+
+packages:
+
+  '@naverpay/hidash@0.2.2':
+    resolution: {integrity: sha512-hBbVEIzNwvli+uPhKhlTVaT2FnL2kqiRHZSVXdG1tboZJwHRvCuwFZY4GbEuXz/PekN8D2cniq02jJoKoS76ug==}
+    engines: {node: '>=18.18.0'}
+
+snapshots:
+
+  '@naverpay/hidash@0.2.2': {}
