@@ -9,12 +9,15 @@
     "main": "index.js",
     "scripts": {
         "build": "turbo build",
+        "changeset-version": "changeset version",
         "clean": "turbo clean",
         "lint": "eslint '**/*.{js,yaml,yml,json}' --fix",
         "prettier": "prettier --write '**/*.{js,json}'",
+        "release": "changeset publish",
         "start": "turbo start"
     },
     "devDependencies": {
+        "@changesets/cli": "^2.28.1",
         "@naverpay/eslint-config": "^2.2.5",
         "@naverpay/prettier-config": "^1.0.1",
         "@types/node": "^22.14.0",
