@@ -1,54 +1,46 @@
 import EventEmitter from 'node:events'
-
 import {isValidEvent} from '@my-monorepo/lib'
 import isEmpty from '@naverpay/hidash/isEmpty'
 
 type Handler = (...args: any[]) => void
+type Listener = {handler: Handler; once: boolean}
 
 class Core extends EventEmitter {
     // 이벤트 타입과 핸들러를 저장
-    #listeners: Record<string, {handler: Handler; once: boolean}[]> = {}
+    #listeners: Record<string, Listener[]> = {}
 
-    // eslint-disable-next-line no-useless-constructor
     constructor() {
         super()
     }
 
     /**
      * 이벤트 등록
-     * @param {string} eventType - 이벤트 타입
-     * @param {Function} handler - 이벤트 핸들러 함수
-     * @param {boolean} [once=false] - 한 번만 실행되는지 여부
+     * @param eventType - 이벤트 타입
+     * @param handler - 이벤트 핸들러 함수
+     * @param once - 한 번만 실행되는지 여부 (기본값: false)
      */
-    registerEvent(eventType: string, handler: Handler, once: boolean = false) {
+    registerEvent(eventType: string, handler: Handler, once = false): void {
         if (!isValidEvent(handler)) {
             throw new Error('Invalid handler')
         }
-        if (isEmpty(this.#listeners[eventType])) {
+
+        // 이벤트 타입 초기화
+        if (!this.#listeners[eventType]) {
             this.#listeners[eventType] = []
         }
 
         // 핸들러 등록
-        if (once) {
-            const wrappedHandler = (...args: unknown[]) => {
-                handler(...args)
-                this.removeEvent(eventType, wrappedHandler)
-            }
-            this.once(eventType, wrappedHandler)
-            this.#listeners[eventType]?.push({handler: wrappedHandler, once})
-        } else {
-            this.on(eventType, handler)
-            this.#listeners[eventType]?.push({handler, once})
-        }
+        const wrappedHandler = once ? this.#wrapOnceHandler(eventType, handler) : handler
+        this.#addListener(eventType, wrappedHandler, once)
     }
 
     /**
      * 이벤트 트리거
-     * @param {string} eventType - 트리거할 이벤트 타입
-     * @param  {...any} args - 핸들러에 전달할 인수
+     * @param eventType - 트리거할 이벤트 타입
+     * @param args - 핸들러에 전달할 인수
      */
-    emitEvent(eventType: string, ...args: unknown[]) {
-        if (!this.#listeners[eventType]) {
+    emitEvent(eventType: string, ...args: unknown[]): void {
+        if (!this.#listeners[eventType] || this.#listeners[eventType].length === 0) {
             console.warn(`No listeners registered for event: ${eventType}`)
             return
         }
@@ -57,10 +49,10 @@ class Core extends EventEmitter {
 
     /**
      * 특정 이벤트의 핸들러 제거
-     * @param {string} eventType - 제거할 이벤트 타입
-     * @param {Function} handler - 제거할 핸들러 함수
+     * @param eventType - 제거할 이벤트 타입
+     * @param handler - 제거할 핸들러 함수
      */
-    removeEvent(eventType: string, handler: Handler) {
+    removeEvent(eventType: string, handler: Handler): void {
         if (!this.#listeners[eventType]) return
 
         // 내부 관리용 배열에서 삭제
@@ -77,9 +69,9 @@ class Core extends EventEmitter {
 
     /**
      * 특정 이벤트의 모든 핸들러 제거
-     * @param {string} eventType - 제거할 이벤트 타입
+     * @param eventType - 제거할 이벤트 타입
      */
-    removeAllEvents(eventType: string) {
+    removeAllEvents(eventType: string): void {
         if (!this.#listeners[eventType]) return
 
         // 실제 EventEmitter에서 모든 리스너 제거
@@ -92,8 +84,32 @@ class Core extends EventEmitter {
     /**
      * 현재 등록된 모든 리스너 반환 (디버깅 용도)
      */
-    getListeners() {
+    getListeners(): Record<string, Listener[]> {
         return JSON.parse(JSON.stringify(this.#listeners))
+    }
+
+    /** ===========================
+     * Private Methods (Internal)
+     ============================ */
+
+    /**
+     * 핸들러를 한번만 실행되도록 래핑하는 메서드
+     */
+    #wrapOnceHandler(eventType: string, handler: Handler): Handler {
+        return (...args: unknown[]) => {
+            handler(...args)
+            this.removeEvent(eventType, handler)
+        }
+    }
+
+    /**
+     * 리스너를 추가하는 내부 메서드
+     */
+    #addListener(eventType: string, handler: Handler, once: boolean): void {
+        this[once ? 'once' : 'on'](eventType, handler) // EventEmitter API 사용
+
+        // 내부 관리용 배열에 추가
+        this.#listeners[eventType]?.push({handler, once})
     }
 }
 
