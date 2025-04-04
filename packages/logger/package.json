@@ -1,0 +1,19 @@
+{
+    "name": "@my-monorepo/logger",
+    "version": "1.0.0",
+    "type": "module",
+    "main": "./dist/index.js",
+    "scripts": {
+        "build": "tsc",
+        "clean": "rm -rf dist"
+    },
+    "dependencies": {
+        "winston": "^3.17.0"
+    },
+    "devDependencies": {
+        "@my-monorepo/core": "workspace:^"
+    },
+    "peerDependencies": {
+        "@my-monorepo/core": "workspace:^"
+    }
+}
