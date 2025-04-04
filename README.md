@@ -41,3 +41,22 @@ Install dependencies.
 ```
 
 Now, you are ready to execute the project 🎉.
+
+## Description
+
+Project has four workspaces.
+
+```text
+packages/
+├── component
+├── core
+├── lib
+└── logger
+```
+
+Dependency graph:
+
+- `←` : dependencies
+- `⇠` : peerDependencies, devDependencies
+
+<img src="./image.png" width="430" />
