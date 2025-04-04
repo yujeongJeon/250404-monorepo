@@ -53,6 +53,7 @@ class Core extends EventEmitter {
             return
         }
         this.emit(eventType, ...args)
+        console.log(`Event emitted: ${eventType}`, ...args)
     }
 
     /**
